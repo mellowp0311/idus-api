@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.idus.api.repository.UserSlaveRepository">
+
+    <!-- 사용자 정보 아이디로 조회 -->
+    <select id="selectUserById" parameterType="String" resultType="com.idus.api.domain.user.User">
+        SELECT user_seq,
+               user_id,
+               user_password,
+               user_status,
+               user_type
+          FROM idus_user
+         WHERE user_id = #{userId}
+    </select>
+
+    <!-- 사용자 정보 아아디와 패스워드로 조회 -->
+    <select id="selectUserByIdAndPassword" parameterType="map" resultType="com.idus.api.domain.user.User">
+        SELECT user_seq,
+               user_id,
+               user_password,
+               user_status,
+               user_type
+          FROM idus_user
+         WHERE user_id = #{userId}
+           AND user_password = #{userPassword}
+    </select>
+
+    <!-- (4) 단일 회원 상세 정보 조회 -->
+    <select id="selectUserBySeq" parameterType="long" resultType="com.idus.api.domain.user.User">
+        SELECT user_seq,
+               user_id,
+               user_name,
+               nick_name,
+               phone_no,
+               user_type,
+               user_gender,
+               user_status,
+               reg_date,
+               upd_date
+          FROM idus_user
+         WHERE user_seq = #{userSeq}
+    </select>
+
+    <!-- (5) 단일 회원의 주문 목록 조회 -->
+    <select id="selectUserOrderList" parameterType="long" resultType="com.idus.api.domain.order.Order">
+        SELECT io.order_no,
+               io.product_seq as 'product.product_seq',
+               ip.product_title as 'product.product_title',
+               ip.product_price as 'product.product_price',
+               io.pay_date
+        FROM idus_order io
+       INNER JOIN idus_product ip on io.product_seq = ip.product_seq
+       WHERE buyer_seq = #{userSeq}
+    </select>
+
+    <resultMap id="user" type="com.idus.api.domain.user.User">
+        <id property="userSeq" column="user_seq" />
+        <association property="lastOrder" column="user_seq" select="selectUserLastOrder"/>
+    </resultMap>
+
+    <!-- (6) 여러 회원 목록 조회 -->
+    <select id="selectUserList" parameterType="com.idus.api.domain.user.UserSearch" resultMap="user">
+        SELECT iu.user_seq,
+               iu.user_id,
+               iu.user_name,
+               iu.nick_name,
+               iu.phone_no
+          FROM idus_user iu
+         WHERE 1 = 1
+        <if test="searchType != '' and searchWord != '' ">
+            <choose>
+                <when test="searchType == 'name' ">
+                    AND iu.user_name LIKE concat('%', #{userName}, '%')
+                </when>
+                <otherwise>
+                    AND iu.user_id LIKE concat('%', #{userId}, '%')
+                </otherwise>
+            </choose>
+        </if>
+         LIMIT #{page}, #{searchQuantity}
+    </select>
+
+    <!-- (6) 여러 회원 목록 조회 > 최신 주문정보 1건 조회 -->
+    <select id="selectUserLastOrder" parameterType="long" resultType="com.idus.api.domain.order.Order">
+        SELECT io.order_no,
+               io.product_seq as 'product.product_seq',
+               ip.product_title as 'product.product_title',
+               ip.product_price as 'product.product_price',
+               io.pay_date
+        FROM idus_order io
+       INNER JOIN idus_product ip on io.product_seq = ip.product_seq
+       WHERE buyer_seq = #{userSeq}
+       ORDER BY pay_date DESC
+       LIMIT 1
+    </select>
+
+
+</mapper>

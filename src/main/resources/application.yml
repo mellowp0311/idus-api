@@ -1,0 +1,53 @@
+server:
+  port: 8080
+  compression:
+    min-response-size: 1
+    enabled: true
+
+spring:
+  application:
+    name: idus-api
+  profiles:
+    active: local
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+jwt:
+  access-token-refresh-url: /re/authenticate
+  access-token-secret-key: mellowp_access_secret_key_##@^&$
+  access-token-expire-minute: 30
+  refresh-token-secret-key: mellowp_refresh_secret_key_##@^&$
+  refresh-token-expire-minute: 10080
+
+# logging config
+logging:
+  config: classpath:logback-spring.xml
+  file: ${spring.application.name}
+
+---
+spring:
+  profiles:
+    active: local
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+
+idus:
+  datasource:
+    master:
+      driver-class-name: org.mariadb.jdbc.Driver
+      url: jdbc:mariadb://dragonfly14.synology.me:3306/wow?useSSL=false&useUnicode=true&allowMultiQueries=true&characterEncoding=UTF-8&autoReconnect=true
+      username: tauren
+      password: eowkdrnsxkdnfps
+    slave:
+      driver-class-name: org.mariadb.jdbc.Driver
+      url: jdbc:mariadb://dragonfly14.synology.me:3306/wow?useSSL=false&useUnicode=true&allowMultiQueries=true&characterEncoding=UTF-8&autoReconnect=true
+      username: tauren
+      password: eowkdrnsxkdnfps
+
+# actuator 설정
+management:
+  endpoints:
+    web:
+      base-path: /servicemanager

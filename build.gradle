@@ -1,0 +1,54 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.idus'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation 'org.projectlombok:lombok:1.18.18'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // mybatis config
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1"
+    compile("org.mybatis:mybatis-typehandlers-jsr310:1.0.2")
+    // maria db config
+    compile 'org.mariadb.jdbc:mariadb-java-client:2.5.3'
+    compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.5.1'
+    // swagger config
+    compile("io.springfox:springfox-swagger2:2.9.2")
+    compile("io.springfox:springfox-swagger-ui:2.9.2")
+    // jwt config
+    compile('io.jsonwebtoken:jjwt-api:0.11.2')
+    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2', 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    // logback config
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
+    implementation group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}

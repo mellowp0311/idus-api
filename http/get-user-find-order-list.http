@@ -1,0 +1,4 @@
+GET http://localhost:8080/user/order/1
+accept: */*
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyU2VxIjoxLCJ1c2VySWQiOiJtZWxsb3dfcEBuYXZlci5jb20iLCJ1c2VyVHlwZSI6MCwidXNlclN0YXR1cyI6MCwic3ViIjoibWVsbG93X3BAbmF2ZXIuY29tIiwiaWF0IjoxNjMxMDkxNTgxLCJleHAiOjE2MzEwOTMzODF9.Gbw4LgGU8-AVUrhTjBnl-JWjfb3Vz66iaMWNhasymHQ
+Content-Type: application/json
